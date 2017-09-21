@@ -1,0 +1,24 @@
+{
+  "name": "image-resize",
+  "version": "1.0.0",
+  "description": "Serverless image resizing",
+  "readme": "Serverless image resizing",
+  "repository": "https://github.com/awslabs/serverless-image-resizing",
+  "license": "Apache-2.0",
+  "main": "index.js",
+  "scripts": {
+    "deploy": "node-lambda deploy"
+  },
+  "dependencies": {
+    "sharp": "^0.17.3",
+    "imagemin": "^3.2.0",
+    "imagemin-gifsicle": "^4.0.0",
+    "imagemin-jpegtran": "^4.0.0",
+    "imagemin-optipng": "^4.3.0",
+    "imagemin-svgo": "^4.0.0"
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.36.0",
+    "node-lambda": "^0.7.1"
+  }
+}
