@@ -3,7 +3,11 @@
 const AWS = require('aws-sdk')
 const S3 = new AWS.S3({signatureVersion: 'v4'})
 const Sharp = require('sharp')
-const Imagemin = require('imagemin')
+const imagemin = require('imagemin')
+const imageminJpegtran = require('imagemin-jpegtran')
+const imageminOptipng = require('imagemin-optipng')
+const imageminGifsiclet = require('imagemin-gifsicle')
+const imageminSvgo = require('imagemin-svgo')
 
 const BUCKET = process.env.BUCKET
 const URL = process.env.URL
@@ -28,20 +32,12 @@ exports.handler = function (event, context, callback) {
       .toFormat('png')
       .toBuffer()
     )
-    .then(buffer => new Promise((resolve, reject) =>
-      new Imagemin()
-        .src(buffer)
-        .use(Imagemin.jpegtran(imageminOptions))
-        .use(Imagemin.gifsicle(imageminOptions))
-        .use(Imagemin.optipng(imageminOptions))
-        .use(Imagemin.svgo({plugins: imageminOptions.svgoPlugins || []}))
-        .run(function (err, files) {
-          if (err) return reject(err)
-          console.log('Optimized! Final file size reduced from ' + buffer.length + ' to ' + files[0].contents.length + ' bytes')
-          resolve(files[0].contents)
-        })
-      )
-    )
+    .then(buffer => imagemin.buffer(buffer, { plugins: [
+      imageminJpegtran(),
+      imageminOptipng(),
+      imageminGifsiclet(),
+      imageminSvgo()
+    ]}))
     .then(buffer => S3.putObject({
       Body: buffer,
       Bucket: BUCKET,
