@@ -14,14 +14,15 @@ const URL = process.env.URL
 
 exports.handler = function (event, context, callback) {
   const key = event.queryStringParameters.key
-  const match = key.match(/(\d+)x(\d+)\/(.*)/)
+  const match = key.match(/(\d+)x(\d+)(\^?)\/(.*)/)
   const width = parseInt(match[1], 10)
   const height = parseInt(match[2], 10)
-  const originalKey = match[3]
+  const arg = match[3]
+  const originalKey = match[4]
 
   S3.getObject({Bucket: BUCKET, Key: originalKey}).promise()
     .then(data => new Promise((resolve, reject) => gm(data.Body, originalKey)
-      .resize(width, height)
+      .resize(width > 0 ? width : null, height > 0 ? height : null, arg)
       .toBuffer((error, buffer) => {
         if (error) { return reject(error) }
         resolve(buffer)
