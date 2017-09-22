@@ -21,7 +21,7 @@ exports.handler = function (event, context, callback) {
 
   S3.getObject({Bucket: BUCKET, Key: originalKey}).promise()
     .then(data => new Promise((resolve, reject) => gm(data.Body, originalKey)
-      .resize(width, height)
+      .resize(width > 0 ? width : null, height > 0 ? height : null)
       .toBuffer((error, buffer) => {
         if (error) { return reject(error) }
         resolve(buffer)
