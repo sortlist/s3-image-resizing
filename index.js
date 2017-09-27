@@ -39,11 +39,14 @@ exports.handler = function (event, context, callback) {
         ContentType: data.ContentType,
         Key: key
       }).promise())
-    )
-    .then(() => callback(null, {
-      statusCode: '301',
-      headers: {'location': `${URL}/${key}`},
-      body: ''
+      .then(() => callback(null, {
+        statusCode: '301',
+        headers: {'location': `${URL}/${key}`},
+        body: ''
+      }))
+      .catch(err => callback(err))
+    , (error) => {
+      console.log(error) 
+      return callback(null, { statusCode: '404' }
     }))
-    .catch(err => callback(err))
 }
