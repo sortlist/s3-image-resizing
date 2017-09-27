@@ -44,9 +44,8 @@ exports.handler = function (event, context, callback) {
         headers: {'location': `${URL}/${key}`},
         body: ''
       }))
-      .catch(err => callback(err))
-    , (error) => {
-      console.log(error)
-      return callback(null, { statusCode: '404' })
+    ).catch((error) => {
+      console.error(error)
+      return callback(null, { statusCode: error.statusCode || 500 })
     })
 }
