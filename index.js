@@ -46,7 +46,7 @@ exports.handler = function (event, context, callback) {
       }))
       .catch(err => callback(err))
     , (error) => {
-      console.log(error) 
-      return callback(null, { statusCode: '404' }
-    }))
+      console.log(error)
+      return callback(null, { statusCode: '404' })
+    })
 }
